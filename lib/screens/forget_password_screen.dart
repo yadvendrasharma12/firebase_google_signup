@@ -36,7 +36,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx); // close dialog
-                  Navigator.pushReplacementNamed(context, '/signin'); // go back to sign in
+                  Navigator.pushReplacementNamed(context, '/signin');
                 },
                 child: const Text("OK"),
               ),
@@ -44,7 +44,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         );
       } catch (e) {
-        // ✅ Show error popup
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -128,7 +127,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       const SizedBox(height: 25),
 
-                      // Send reset link button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -148,7 +146,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       const SizedBox(height: 15),
 
-                      // Back to login
                       TextButton(
                         onPressed: () =>
                             Navigator.pushReplacementNamed(context, '/signin'),

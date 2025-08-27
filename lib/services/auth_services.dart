@@ -15,7 +15,6 @@ class AuthService {
         password: password,
       );
 
-      // Update display name
       await userCredential.user!.updateDisplayName(name);
 
       return userCredential.user;
@@ -30,7 +29,6 @@ class AuthService {
     required String password,
   }) async {
     try {
-      // Agar empty email/password daala
       if (email.isEmpty || password.isEmpty) {
         throw "Please create an account first!";
       }

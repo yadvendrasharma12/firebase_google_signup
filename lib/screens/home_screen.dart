@@ -6,7 +6,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔹 Get current logged-in user
     User? user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
@@ -16,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await FirebaseAuth.instance.signOut(); // logout
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacementNamed(context, '/signin'); // back to SignIn
             },
           )
@@ -40,11 +39,10 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // 🔹 Logout Button
             ElevatedButton.icon(
               onPressed: () async {
-                await FirebaseAuth.instance.signOut(); // logout
-                Navigator.pushReplacementNamed(context, '/signin'); // back to SignIn
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacementNamed(context, '/signin');
               },
               icon: const Icon(Icons.logout),
               label: const Text("Logout"),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_signin/services/auth_services.dart'; // Firebase Auth import
+import 'package:google_signin/services/auth_services.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -78,7 +77,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 25),
 
-                      // Full Name
                       TextFormField(
                         controller: _nameCtrl,
                         decoration: InputDecoration(
@@ -107,7 +105,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Email
                       TextFormField(
                         controller: _emailCtrl,
                         decoration: InputDecoration(
@@ -166,7 +163,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 30),
 
-                      // Register Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -177,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             backgroundColor: const Color(0xff6a11cb),
                           ),
-                          onPressed: _createAccount, // 🔹 yahan call kar rahe hain
+                          onPressed: _createAccount,
                           child: const Text(
                             "Register",
                             style:

@@ -24,7 +24,6 @@ class _SignInScreenState extends State<SignInScreen> {
         );
 
         if (user != null) {
-          // ✅ Success popup
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -164,7 +163,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 25),
 
-                  // Login Button
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -197,7 +195,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -209,7 +206,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
                   const SizedBox(height: 15),
 
-                  // Divider
                   Row(
                     children: const [
                       Expanded(child: Divider()),
@@ -222,7 +218,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Sign Up link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
