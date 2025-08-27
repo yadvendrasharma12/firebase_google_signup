@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,7 +17,6 @@ class AuthService {
       );
 
       await userCredential.user!.updateDisplayName(name);
-
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       throw e.message ?? "Sign up failed";
@@ -32,12 +32,10 @@ class AuthService {
       if (email.isEmpty || password.isEmpty) {
         throw "Please create an account first!";
       }
-
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
@@ -52,7 +50,7 @@ class AuthService {
     }
   }
 
-  /// 🔹 Forgot Password (Reset Email)
+  /// 🔹 Forgot Password
   Future<void> forgotPassword(String email) async {
     try {
       if (email.isEmpty) throw "Please enter your registered email";
@@ -71,6 +69,30 @@ class AuthService {
   /// 🔹 Sign Out
   Future<void> signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().signOut(); // Google sign out bhi
+  }
+
+  /// 🔹 Google Sign-In
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return null; // user canceled
+
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential =
+      await _auth.signInWithCredential(credential);
+
+      return userCredential.user;
+    } catch (e) {
+      throw "Google Sign-In failed: $e";
+    }
   }
 
   /// 🔹 Current User

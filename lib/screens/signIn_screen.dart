@@ -12,9 +12,9 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
-
   final AuthService _authService = AuthService();
 
+  // Email login
   Future<void> _loginUser() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -22,37 +22,52 @@ class _SignInScreenState extends State<SignInScreen> {
           email: _emailCtrl.text.trim(),
           password: _passwordCtrl.text.trim(),
         );
-
-        if (user != null) {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              title: const Text("Success"),
-              content: const Text("Logged in successfully!"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            ),
-          );
-        }
+        if (user != null) _showSuccessDialog("Logged in successfully!");
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Login failed: $e"),
-            backgroundColor: Colors.red,
-          ),
-        );
+        _showErrorSnackBar(e.toString());
       }
     }
+  }
+
+  // Google login
+  Future<void> _loginWithGoogle() async {
+    try {
+      final user = await _authService.signInWithGoogle();
+      if (user != null) _showSuccessDialog("Google Sign-In successful!");
+    } catch (e) {
+      _showErrorSnackBar(e.toString());
+    }
+  }
+
+  // Success dialog
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text("Success"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.pushReplacementNamed(context, '/home');
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Error snackbar
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -81,14 +96,12 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Avatar
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 45,
                     backgroundColor: Color(0xff6a11cb),
-                    child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                    child: Icon(Icons.person, size: 50, color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
-
                   const Text(
                     "Welcome Back",
                     style: TextStyle(
@@ -113,13 +126,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       fillColor: Colors.grey[100],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.grey, width: 1.2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.grey, width: 1.2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -143,13 +149,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       fillColor: Colors.grey[100],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.grey, width: 1.2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.grey, width: 1.2),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -157,48 +156,28 @@ class _SignInScreenState extends State<SignInScreen> {
                             color: Color(0xff6a11cb), width: 1.8),
                       ),
                     ),
-
                     validator: (val) =>
                     val!.isEmpty ? "Enter your password" : null,
                   ),
                   const SizedBox(height: 25),
 
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
+                  // Login button
+                  _buildButton("Login", _loginUser,
+                      [Colors.blue, Color(0xff6a11cb)], Colors.white),
 
-                      onPressed: _loginUser,
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        padding: EdgeInsets.zero,
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Colors.blue, Color(0xff6a11cb)],
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: 15),
+
+                  // Google Sign-In button
+                  _buildButton("SignIn with Google", _loginWithGoogle,
+                      [Color(0xff6a11cb), Colors.blue], Colors.white),
+
                   const SizedBox(height: 15),
 
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/forgot'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/forgot'),
                       child: const Text("Forgot Password?",
                           style: TextStyle(color: Color(0xff6a11cb))),
                     ),
@@ -232,10 +211,37 @@ class _SignInScreenState extends State<SignInScreen> {
                                 fontWeight: FontWeight.bold)),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed,
+      List<Color> gradient, Color textColor) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          padding: EdgeInsets.zero,
+        ),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: gradient),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(text, style: TextStyle(fontSize: 18, color: textColor)),
           ),
         ),
       ),
