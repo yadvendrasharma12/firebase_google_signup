@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_signin/screens/phone_auth_screen.dart';
 import '../services/auth_services.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -171,6 +172,34 @@ class _SignInScreenState extends State<SignInScreen> {
                   _buildButton("SignIn with Google", _loginWithGoogle,
                       [Color(0xff6a11cb), Colors.blue], Colors.white),
 
+                  const SizedBox(height: 15),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PhoneAuthScreen()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Colors.blue,Colors.blue.shade800
+                        ]),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text("SignIn with Phone", style: TextStyle(fontSize: 18, color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                ),
                   const SizedBox(height: 15),
 
                   Align(
